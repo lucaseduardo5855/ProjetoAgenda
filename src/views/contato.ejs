@@ -1,43 +1,56 @@
 <%- include('includes/head')%>
-    <%- include('includes/nav')%>
+<%- include('includes/nav')%>
 
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-2"></div>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-2"></div>
 
-                <div class="col-lg-8 my-5">
-                    <h1 class="text-center">Contato</h1>
-                    <p class="text-center lead">Crie ou Edite seu Contato</p>
+        <div class="col-lg-8 my-3">
+            <h1 class="text-center">Contato</h1>
+            <p class="text-center lead">Crie ou edite seu contato abaixo.</p>
 
-                    <%- include('includes/messages') %>
+            <!-- 1. INCLUIR AS MENSAGENS FLASH (O que está faltando) -->
+            <%- include('includes/messages') %>
 
-                <form action="/contato/register" method="POST">
-                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                    <div class="form-group">
-                        <label>Nome</label>
-                        <input value="<%= contato.nome %>" type="text" class="form-control" name="nome">
-                    </div>
-                    <div class="form-group">
-                        <label>Sobrenome</label>
-                        <input value="<%= contato.sobrenome %>" type="text" class="form-control" name="sobrenome">
-                    </div>
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input  value="<%= contato.email %>" type="email" class="form-control" name="email">
-                    </div>
-                    <div class="form-group">
-                        <label>Telefone</label>
-                        <input value="<%= contato.telefone %>" type="tel" class="form-control" name="telefone">
-                    </div>
+            <!-- 
+              2. LÓGICA DE ROTA:
+              SE 'contato._id' EXISTIR (estamos editando), o formulário envia para a rota de EDIÇÃO.
+              SE NÃO (é um objeto vazio), envia para a rota de REGISTRO.
+            -->
+            <% if(contato._id) { %>
+              <form action="/contato/edit/<%= contato._id %>" method="POST">
+            <% } else { %>
+              <form action="/contato/register" method="POST">
+            <% } %>
 
-                    <button type="submit" class="btn btn-primary">Salvar</button>
-                </form>
+                <!-- Token CSRF (Importante para segurança POST) -->
+                <input type="hidden" name="_csrf" value=<%= csrfToken %>>
 
-
+                <div class="form-group mb-3">
+                  <label>Nome</label>
+                  <!-- 3. LÓGICA DE VALOR: Preenche o campo com os dados do contato -->
+                  <input value="<%= contato.nome %>" type="text" class="form-control" name="nome">
+                </div>
+                <div class="form-group mb-3">
+                  <label>Sobrenome</label>
+                  <input value="<%= contato.sobrenome %>" type="text" class="form-control" name="sobrenome">
+                </div>
+                <div class="form-group mb-3">
+                  <label>Email</label>
+                  <input value="<%= contato.email %>" type="email" class="form-control" name="email">
+                </div>
+                <div class="form-group mb-3">
+                  <label>Telefone</label>
+                  <input value="<%= contato.telefone %>" type="tel" class="form-control" name="telefone">
                 </div>
 
-                <div class="col-lg-2"></div>
-            </div>
+                <button type="submit" class="btn btn-primary my-3">Salvar</button>
+            </form>
+
         </div>
 
-        <%- include('includes/footer')%>
+        <div class="col-lg-2"></div>
+    </div>
+</div>
+
+<%- include('includes/footer')%>
