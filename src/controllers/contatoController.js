@@ -1,4 +1,4 @@
-const Contato = require('../models/contatoModel');
+const Contato = require('../models/ContatoModel');
 
 // Rota GET: Renderiza o formulário de "Criar novo contato"
 exports.index = (req, res) => {
@@ -74,3 +74,14 @@ exports.edit = async function (req, res) {
     res.render('404');
   }
 };
+
+exports.delete = async function(req, res) {
+  if(!req.params.id) return res.render('404'); // 1. Verifica se o ID foi enviado
+  
+  const contato = await Contato.delete(req.params.id); // 2. Chama a função de exclusão no Model
+  if(!contato) return res.render('404'); // 3. Verifica se a exclusão foi bem-sucedida
+  
+  req.flash('success', 'Contato apagado com sucesso');
+  req.session.save(() => res.redirect('/contato/index'));
+  return;
+}
